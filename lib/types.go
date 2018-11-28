@@ -9,6 +9,41 @@ import (
 	"github.com/google/uuid"
 )
 
+type SumEntry struct {
+	Date      time.Time
+	StartTime string
+	EndTime   string
+	Duration  string
+	Project   string
+	Message   string
+	ID        string
+}
+
+func (se SumEntry) Day() int {
+	return se.Date.Day()
+}
+
+func (se SumEntry) Week() int {
+	_, week := se.Date.ISOWeek()
+	return week
+}
+
+func (se SumEntry) Month() int {
+	return int(se.Month())
+}
+
+func (se SumEntry) Year() int {
+	return se.Year()
+}
+
+func (se SumEntry) ShortDate() string {
+	return strconv.Itoa(se.Year()) + "-" + strconv.Itoa(se.Month()) + "-" + strconv.Itoa(se.Day())
+}
+
+type Summary struct {
+	Entries []SumEntry
+}
+
 type LogEntry struct {
 	StartTime time.Time `json:"startTime"`
 	EndTime   time.Time `json:"endTime"`
@@ -32,17 +67,17 @@ func ParseLogEntry(args []string) (LogEntry, error) {
 	// Probably we should start processing elements in reverse and strip message and project, leaving only the time
 	// definition. Then parse time formats.
 	year, month, day := time.Now().Date()
-	starttime, err := time.Parse("2006/01/02 15:04", strconv.Itoa(year)+"/"+strconv.Itoa(int(month))+"/"+strconv.Itoa(day)+" "+durs[0])
+	starttime, err := time.Parse(ShortDate+" 15:04", strconv.Itoa(year)+"/"+strconv.Itoa(int(month))+"/"+strconv.Itoa(day)+" "+durs[0])
 	if err != nil {
-		starttime, err = time.Parse("2006/01/02 15:04", durs[0])
+		starttime, err = time.Parse(ShortDate+" 15:04", durs[0])
 		if err != nil {
 			return LogEntry{}, err
 		}
 	}
 
-	endtime, err := time.Parse("2006/01/02 15:04", strconv.Itoa(year)+"/"+strconv.Itoa(int(month))+"/"+strconv.Itoa(day)+" "+durs[1])
+	endtime, err := time.Parse(ShortDate+" 15:04", strconv.Itoa(year)+"/"+strconv.Itoa(int(month))+"/"+strconv.Itoa(day)+" "+durs[1])
 	if err != nil {
-		endtime, err = time.Parse("2006/01/02 15:04", durs[1])
+		endtime, err = time.Parse(ShortDate+" 15:04", durs[1])
 		if err != nil {
 			return LogEntry{}, err
 		}
