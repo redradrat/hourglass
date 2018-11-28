@@ -2,6 +2,7 @@ package lib
 
 import (
 	"encoding/json"
+	"fmt"
 	"io/ioutil"
 	"os"
 
@@ -36,6 +37,46 @@ func ReadFromLib() (Log, error) {
 	json.Unmarshal(in, &log)
 
 	return log, nil
+}
+
+func DeleteFromLib(id string) error {
+	err := ensureStorageFile()
+	if err != nil {
+		return err
+	}
+
+	home, err := homedir.Dir()
+	if err != nil {
+		return err
+	}
+
+	dbFile := home + "/" + defaultStorageFile
+	oldStoreCont, err := ioutil.ReadFile(dbFile)
+	if err != nil {
+		return err
+	}
+
+	var log Log
+	json.Unmarshal(oldStoreCont, &log)
+
+	uid, err := uuid.Parse(id)
+	if err != nil {
+		return err
+	}
+	if _, ok := log.LogEntries[uid]; !ok {
+		return fmt.Errorf("No entry found with given log id [%s]", id)
+	}
+
+	delete(log.LogEntries, uid)
+
+	output, err := json.MarshalIndent(log, "", "  ")
+	if err != nil {
+		return err
+	}
+
+	ioutil.WriteFile(dbFile, output, 0644)
+
+	return nil
 }
 
 func WriteToLib(entry LogEntry) error {
