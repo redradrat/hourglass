@@ -1,7 +1,7 @@
 package cmd
 
 import (
-	"github.com/redradrat/hourglass/lib"
+	"github.com/redradrat/hourglass/lib/storage"
 	"github.com/spf13/cobra"
 )
 
@@ -21,7 +21,14 @@ var (
 )
 
 func deleteLog(cmd *cobra.Command, args []string) error {
-	if err := lib.DeleteFromLib(args[0]); err != nil {
+	// Get backend as configured
+	be, err := storage.GetBackend()
+	if err != nil {
+		return err
+	}
+
+	// Delete Log Entry
+	if err := be.DeleteFromLog(args[0]); err != nil {
 		return err
 	}
 	return nil

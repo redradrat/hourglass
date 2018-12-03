@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"github.com/redradrat/hourglass/lib"
+	"github.com/redradrat/hourglass/lib/storage"
 	"github.com/spf13/cobra"
 )
 
@@ -15,7 +16,6 @@ var (
 		Use:     "summary",
 		Aliases: []string{"sum"},
 		Short:   "Sum up logs ",
-		Args:    cobra.NoArgs,
 		Long:    `Display a summary of stored logs`,
 		RunE:    summary,
 	}
@@ -24,10 +24,19 @@ var (
 )
 
 func summary(cmd *cobra.Command, args []string) error {
-	log, err := lib.ReadFromLib()
+	// Get backend as configured
+	be, err := storage.GetBackend()
 	if err != nil {
 		return err
 	}
+
+	// Get log from backend
+	log, err := be.GetLog()
+	if err != nil {
+		return err
+	}
+
+	// Print log to stdout
 	lib.PrintLogToStdOut(log, showIDs)
 	return nil
 }

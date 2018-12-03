@@ -15,7 +15,42 @@ const (
 	ShortDate = "2006/01/02"
 )
 
-func PrintLogToStdOut(l Log, showIDs bool) {
+type SumEntry struct {
+	Date      time.Time
+	StartTime string
+	EndTime   string
+	Duration  string
+	Project   string
+	Message   string
+	ID        string
+}
+
+func (se SumEntry) Day() int {
+	return se.Date.Day()
+}
+
+func (se SumEntry) Week() int {
+	_, week := se.Date.ISOWeek()
+	return week
+}
+
+func (se SumEntry) Month() int {
+	return int(se.Month())
+}
+
+func (se SumEntry) Year() int {
+	return se.Year()
+}
+
+func (se SumEntry) ShortDate() string {
+	return strconv.Itoa(se.Year()) + "-" + strconv.Itoa(se.Month()) + "-" + strconv.Itoa(se.Day())
+}
+
+type Summary struct {
+	Entries []SumEntry
+}
+
+func PrintLogToStdOut(l *Log, showIDs bool) {
 	output := Summary{}
 	for id, v := range l.LogEntries {
 		d := v.EndTime.Sub(v.StartTime).Round(time.Second)
