@@ -63,3 +63,22 @@ func ParseLogEntry(args []string) (LogEntry, error) {
 
 	return entry, nil
 }
+
+func ProjectFilterLog(filter []string, log *Log) *Log {
+	processedEntries := log.LogEntries
+	finalLog := &Log{}
+	*finalLog = *log
+	for i, entry := range processedEntries {
+		hit := false
+		for _, projectFilter := range filter {
+			if entry.Project == projectFilter {
+				hit = true
+			}
+		}
+		if !hit {
+			delete(processedEntries, i)
+		}
+	}
+	finalLog.LogEntries = processedEntries
+	return finalLog
+}

@@ -8,7 +8,8 @@ import (
 
 func init() {
 	rootCmd.AddCommand(summaryCmd)
-	summaryCmd.Flags().BoolVar(&showIDs, "id", false, "Display IDs for entries in summary")
+	summaryCmd.Flags().BoolVar(&showIDs, "id", false, "display IDs for entries in summary")
+	summaryCmd.Flags().StringSliceVarP(&projectFilter, "project", "p", []string{}, "filter for specific project")
 }
 
 var (
@@ -20,7 +21,8 @@ var (
 		RunE:    summary,
 	}
 
-	showIDs bool
+	showIDs       bool
+	projectFilter []string
 )
 
 func summary(cmd *cobra.Command, args []string) error {
@@ -34,6 +36,10 @@ func summary(cmd *cobra.Command, args []string) error {
 	log, err := be.GetLog()
 	if err != nil {
 		return err
+	}
+
+	if len(projectFilter) != 0 {
+		lib.ProjectFilterLog(projectFilter, log)
 	}
 
 	// Print log to stdout
