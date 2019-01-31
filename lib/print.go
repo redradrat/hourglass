@@ -99,7 +99,7 @@ func compileSortedOutput(in []SumEntry, showIDs bool) *tablewriter.Table {
 	}
 
 	table := tablewriter.NewWriter(os.Stdout)
-	header := []string{"Week", "Date", "Project", "Mefssage", "Start", "End", "Time"}
+	header := []string{"Week", "Date", "Project", "Message", "Start", "End", "Time"}
 	if showIDs {
 		header = append(header, "ID")
 	}
