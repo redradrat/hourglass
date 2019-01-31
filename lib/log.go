@@ -36,7 +36,7 @@ func ParseLogEntry(args []string) (LogEntry, error) {
 	// Probably we should start processing elements in reverse and strip message and project, leaving only the time
 	// definition. Then parse time formats.
 	year, month, day := time.Now().Date()
-	starttime, err := time.Parse(ShortDate+" 15:04", strconv.Itoa(year)+"/"+strconv.Itoa(int(month))+"/"+fmt.Sprintf("%02d", day)+" "+durs[0])
+	starttime, err := time.Parse(ShortDate+" 15:04", strconv.Itoa(year)+"/"+fmt.Sprintf("%02d", month)+"/"+fmt.Sprintf("%02d", day)+" "+durs[0])
 	if err != nil {
 		starttime, err = time.Parse(ShortDate+" 15:04", durs[0])
 		if err != nil {
@@ -44,7 +44,7 @@ func ParseLogEntry(args []string) (LogEntry, error) {
 		}
 	}
 
-	endtime, err := time.Parse(ShortDate+" 15:04", strconv.Itoa(year)+"/"+strconv.Itoa(int(month))+"/"+fmt.Sprintf("%02d", day)+" "+durs[1])
+	endtime, err := time.Parse(ShortDate+" 15:04", strconv.Itoa(year)+"/"+fmt.Sprintf("%02d", month)+"/"+fmt.Sprintf("%02d", day)+" "+durs[1])
 	if err != nil {
 		endtime, err = time.Parse(ShortDate+" 15:04", durs[1])
 		if err != nil {
