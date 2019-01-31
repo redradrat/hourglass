@@ -10,6 +10,7 @@ func init() {
 	rootCmd.AddCommand(summaryCmd)
 	summaryCmd.Flags().BoolVar(&showIDs, "id", false, "display IDs for entries in summary")
 	summaryCmd.Flags().StringSliceVarP(&projectFilter, "project", "p", []string{}, "filter for specific project")
+	summaryCmd.Flags().StringVarP(&weekFilter, "week", "w", "", "filter for specific weeks [W22 = week 22, -2 (current week + last 2 weeks]")
 }
 
 var (
@@ -23,6 +24,7 @@ var (
 
 	showIDs       bool
 	projectFilter []string
+	weekFilter    string
 )
 
 func summary(cmd *cobra.Command, args []string) error {
@@ -40,6 +42,10 @@ func summary(cmd *cobra.Command, args []string) error {
 
 	if len(projectFilter) != 0 {
 		lib.ProjectFilterLog(projectFilter, log)
+	}
+
+	if weekFilter != "" {
+		lib.WeekFilterLog(weekFilter, log)
 	}
 
 	// Print log to stdout

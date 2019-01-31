@@ -11,10 +11,13 @@ import (
 )
 
 const (
+	// ShortTime represents a short time notation
 	ShortTime = "15:04:05"
+	// ShortDate represents a short date notation
 	ShortDate = "2006/01/02"
 )
 
+// SumEntry represents a single log entry in the summary
 type SumEntry struct {
 	Date      time.Time
 	StartTime string
@@ -25,31 +28,38 @@ type SumEntry struct {
 	ID        string
 }
 
+// Day returns the day of a SumEntry
 func (se SumEntry) Day() int {
 	return se.Date.Day()
 }
 
+// Week returns the week of a SumEntry
 func (se SumEntry) Week() int {
 	_, week := se.Date.ISOWeek()
 	return week
 }
 
+// Month returns the month of a SumEntry
 func (se SumEntry) Month() int {
 	return int(se.Month())
 }
 
+// Year returns the year of a SumEntry
 func (se SumEntry) Year() int {
 	return se.Year()
 }
 
+// ShortDate returns a string with the short date notation of a SumEntry
 func (se SumEntry) ShortDate() string {
 	return strconv.Itoa(se.Year()) + "-" + strconv.Itoa(se.Month()) + "-" + strconv.Itoa(se.Day())
 }
 
+// Summary represents the collection of SumEntries, comprising the entirety of log entries for a given period of time
 type Summary struct {
 	Entries []SumEntry
 }
 
+// PrintLogToStdOut compiles a Summary from a given Log, and prints it to STDOUT
 func PrintLogToStdOut(l *Log, showIDs bool) {
 	output := Summary{}
 	for id, v := range l.LogEntries {
@@ -89,7 +99,7 @@ func compileSortedOutput(in []SumEntry, showIDs bool) *tablewriter.Table {
 	}
 
 	table := tablewriter.NewWriter(os.Stdout)
-	header := []string{"Week", "Date", "Project", "Message", "Start", "End", "Time"}
+	header := []string{"Week", "Date", "Project", "Mefssage", "Start", "End", "Time"}
 	if showIDs {
 		header = append(header, "ID")
 	}

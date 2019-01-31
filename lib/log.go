@@ -2,13 +2,16 @@ package lib
 
 import (
 	"fmt"
+	"os"
 	"strconv"
 	"strings"
 	"time"
 
 	"github.com/google/uuid"
+	"github.com/spf13/jwalterweatherman"
 )
 
+// LogEntry represents an entry inside the Log
 type LogEntry struct {
 	StartTime time.Time `json:"startTime"`
 	EndTime   time.Time `json:"endTime"`
@@ -16,16 +19,17 @@ type LogEntry struct {
 	Message   string    `json:"message"`
 }
 
+// Log represents the collection of all LogEntry.
 type Log struct {
 	LogEntries map[uuid.UUID]LogEntry `json:"logEntries"`
 }
 
-// Parses an array of strings for a log entry definition
+// ParseLogEntry parses an array of strings for a log entry definition
 func ParseLogEntry(args []string) (LogEntry, error) {
 	var entry LogEntry
 	durs := strings.Split(args[0], "-")
 	if len(durs) != 2 {
-		return LogEntry{}, fmt.Errorf("(%s) is not a valid time format!", args[0])
+		return LogEntry{}, fmt.Errorf("(%s) is not a valid time format", args[0])
 	}
 
 	// UGLY AF Time parsing... Let's redo that.
@@ -64,6 +68,19 @@ func ParseLogEntry(args []string) (LogEntry, error) {
 	return entry, nil
 }
 
+// WeekFilterLog filters a given log for a specific week
+func WeekFilterLog(filter string, log *Log) {
+	jwalterweatherman.ERROR.Println("Sorry man! :( Week period filtering is not yet implemented!")
+	os.Exit(1)
+	/*processedEntries := make(map[uuid.UUID]LogEntry)
+	finalLog := &Log{}
+	*finalLog = *log
+	for i, entry := range processedEntries {
+		...
+	}*/
+}
+
+// ProjectFilterLog filters a given log for specific projects
 func ProjectFilterLog(filter []string, log *Log) *Log {
 	processedEntries := log.LogEntries
 	finalLog := &Log{}
